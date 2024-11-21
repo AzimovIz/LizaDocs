@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
 
-    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
         <title>core - Liza 0.0b documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
@@ -191,6 +191,9 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/logo.png" alt="Logo"/>
+  </div>
   
   <span class="sidebar-brand-text">Liza 0.0b documentation</span>
   
@@ -202,13 +205,14 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Ядро</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_manager.html">Модуль менеджер</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../module/index.html">Модуль</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Модуль</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../module/queues.html">Очереди</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../module/extensions.html">Расширения</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../events.html">Ивенты</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connections.html">Маршрутизация</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_manager.html">Модуль менеджер</a></li>
 </ul>
 
 </div>
@@ -275,13 +279,14 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Класс обрабатывает ивенты из очередей и взаимодействует с модульменеджером для работы с модулями.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="Core.__init__">
 <a class="viewcode-back" href="../core.html#core.Core.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
-            <span class="n">connection_config_path</span><span class="o">=</span><span class="s2">&quot;connections/config.yml&quot;</span><span class="p">,</span>
-            <span class="n">minimum_nlu_percent</span><span class="o">=</span><span class="mf">0.69</span><span class="p">,</span>
-            <span class="n">forward_core_events</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">connection_config_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">minimum_nlu_percent</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">forward_core_events</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Инициализация класса с настройками соединения и параметрами обработки NLU.</span>
@@ -292,15 +297,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">MM</span> <span class="o">=</span> <span class="n">ModuleManager</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="p">:</span> <span class="n">NLU</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_nlu_percent</span> <span class="o">=</span> <span class="n">minimum_nlu_percent</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">config_loader</span><span class="p">(</span><span class="n">connection_config_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_nlu_percent</span> <span class="o">=</span> <span class="n">minimum_nlu_percent</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MINIMUM_NLU_PERCENT&quot;</span><span class="p">))</span> <span class="ow">or</span> <span class="mf">1.0</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">config_loader</span><span class="p">(</span><span class="n">connection_config_path</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;CONNECTION_CONFIG_PATH&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;connections/config.yml&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connection_rules</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;rules&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">io_pairs</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;io_pairs&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_intent_examples</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">intents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Intent</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">contexts</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Context</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">forward_core_events</span> <span class="o">=</span> <span class="n">forward_core_events</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forward_core_events</span> <span class="o">=</span> <span class="n">forward_core_events</span> <span class="ow">or</span> <span class="nb">bool</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;FORWARD_CORE_EVENTS&quot;</span><span class="p">)))</span> <span class="ow">or</span> <span class="kc">True</span></div>
 
 
 <div class="viewcode-block" id="Core.init">
@@ -371,6 +376,7 @@
                     <span class="k">await</span> <span class="n">event</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">await</span> <span class="n">event</span><span class="o">.</span><span class="n">reply</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
             <span class="k">return</span> <span class="n">wrapper</span>
 
         <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span>
