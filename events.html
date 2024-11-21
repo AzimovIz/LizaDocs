@@ -302,6 +302,25 @@
 
 </dd></dl>
 
+<p>Для возврата ответа нужно вызвать асинхронный метод <cite>.reply()</cite> у ивента - параметром принимает текстовое значение которое будет переданно в виде текстового ивента в ассоциированую выходную очередь.</p>
+<section id="id2">
+<h2>Примеры<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<section id="id3">
+<h3>Создание<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>В разработке.
+См. <a class="reference external" href="/module/queues.html#id3">Выходная очередь</a></p>
+</div>
+</section>
+<section id="id4">
+<h3>Ответ<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># после работы модуля/выполнения действий/и т.д.</span>
+<span class="k">await</span> <span class="n">event</span><span class="o">.</span><span class="n">reply</span><span class="p">(</span><span class="s2">&quot;Что-то произошло...&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
 </section>
 
         </article>
@@ -370,6 +389,11 @@
 <li><a class="reference internal" href="#event.Event"><code class="docutils literal notranslate"><span class="pre">Event</span></code></a><ul>
 <li><a class="reference internal" href="#event.Event.__init__"><code class="docutils literal notranslate"><span class="pre">Event.__init__()</span></code></a></li>
 <li><a class="reference internal" href="#event.Event.reply"><code class="docutils literal notranslate"><span class="pre">Event.reply()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id2">Примеры</a><ul>
+<li><a class="reference internal" href="#id3">Создание</a></li>
+<li><a class="reference internal" href="#id4">Ответ</a></li>
 </ul>
 </li>
 </ul>

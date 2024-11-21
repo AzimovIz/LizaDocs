@@ -264,24 +264,17 @@
 <p>Очереди - основной интерфеис взаимодействия модулей. Модули кладут или забирают ивенты из своих очередей.</p>
 <section id="id2">
 <h2>Взаимодействие<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
-<p>Взаимодействие происходит через [очередь ивентов](Ивенты.md). Для взаимодействия с ними есть два варианта:
-- Входная очередь - используется для обработки ивентов которые приходят в модуль для обработки или выполнения действия
-- Выходная очередь - используется для того чтобы модуль отправлял ивенты для обработки ядром</p>
+<p>Взаимодействие происходит через очередь <a class="reference external" href="/events.html">ивентов</a>. Для взаимодействия с ними есть два варианта:</p>
+<ul class="simple">
+<li><p><cite>Входная очередь</cite> - используется для обработки ивентов которые приходят в модуль для обработки или выполнения действия</p></li>
+<li><p><cite>Выходная очередь</cite> - используется для того чтобы модуль отправлял ивенты для обработки ядром</p></li>
+</ul>
 </section>
 <section id="id3">
 <h2>Выходная очередь<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
-<p>Для того чтобы использовать очередь нужно добавить переменную <em>senders</em> в <em>main.py</em> файл модуля. Переменная содержит список объектов для создания корутины и передачи в неё очереди.</p>
-<p><strong>main.py</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># imports and other settings</span>
-<span class="kn">from</span> <span class="nn">.my_module_file</span> <span class="kn">import</span> <span class="n">my_function</span> <span class="c1"># import intent function</span>
-
-<span class="n">sender</span> <span class="o">=</span> <span class="n">my_function</span>
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>my_function - ссылка на <strong>асинхронную</strong> функцию, функция должна быть импортирована и передана ссылка на нее - т.е. надо написать функцию без скобок.</p></li>
-</ul>
-<p>Функция будет вызвана один раз при запуске, в функцию будет передана выходная очередь иветны из которой будет обрабатывать ядро. Модуль может по мере готовности данных формировать ивент и добавлять его к очереди.</p>
+<p>Ассинхронная функция которая будет вызвана один раз при запуске,
+в функцию будет передана выходная очередь иветны из которой будет обрабатывать ядро.</p>
+<p>Модуль может по мере готовности данных формировать ивент и добавлять его в очередь.</p>
 <p><strong>my_module_file.py</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">event</span> <span class="kn">import</span> <span class="n">EventTypes</span><span class="p">,</span> <span class="n">Event</span> <span class="c1"># import event classes</span>
 
@@ -289,7 +282,7 @@
 <span class="k">async</span> <span class="k">def</span> <span class="nf">my_function</span><span class="p">(</span><span class="n">queue</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Queue</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;123&quot;</span> <span class="c1"># get data from servises/microphone/http requests...</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;123&quot;</span> <span class="c1"># get data from services/websocket/http requests...</span>
         <span class="k">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
             <span class="n">Event</span><span class="p">(</span>
                 <span class="n">event_type</span><span class="o">=</span><span class="n">EventTypes</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
@@ -298,6 +291,17 @@
         <span class="p">)</span>
 </pre></div>
 </div>
+<p>Для того чтобы использовать очередь нужно добавить переменную <code class="docutils literal notranslate"><span class="pre">sender</span></code> в <strong>main.py</strong> файл модуля и передать в неё ссылку на функцию.</p>
+<p><strong>main.py</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># imports and other settings</span>
+<span class="kn">from</span> <span class="nn">.my_module_file</span> <span class="kn">import</span> <span class="n">my_function</span> <span class="c1"># import intent function</span>
+
+<span class="n">sender</span> <span class="o">=</span> <span class="n">my_function</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>my_function - <cite>ссылка</cite> на <strong>асинхронную</strong> функцию, функция должна быть импортирована и передана ссылка на нее - т.е. надо написать функцию без скобок.</p></li>
+</ul>
 <p>Параметры:</p>
 <ul class="simple">
 <li><p><cite>queue</cite> - выходная очередь, в которую модуль добавляет ивенты</p></li>
